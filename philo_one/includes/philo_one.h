@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 18:18:21 by sabra             #+#    #+#             */
-/*   Updated: 2021/04/18 18:28:33 by sabra            ###   ########.fr       */
+/*   Updated: 2021/04/22 22:00:50 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,12 @@
 # define OPTIONS_H
 
 # include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <pthread.h>
+# define STDIN 0
+# define STDOUT 1
+# define STDERR 2
 
 typedef struct s_opt
 {
@@ -25,5 +31,6 @@ typedef struct s_opt
 }		t_opt;
 
 int	ft_atoi(const char *str);
+int	init_args(t_opt *opts, int ac, char **av);
 
 #endif

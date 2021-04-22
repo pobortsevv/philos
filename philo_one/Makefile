@@ -18,14 +18,14 @@ all:
 
 $(NAME):	$(OBJS)
 	@$(CC) $(OBJS) -o $(NAME)
-	echo philo_one compiled!
+	@echo philo_one compiled!
 
 clean:
 	@$(RM) $(OBJS)
-	echo clean .o files
+	@echo clean .o files
 
 fclean: clean
 	@$(RM) $(NAME)
-	echo philo_one removed!
+	@echo philo_one removed!
 
 re:	fclean $(NAME)
