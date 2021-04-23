@@ -54,15 +54,17 @@ int	ft_atoi(const char *str)
 
 void	init_exit(t_ph *philos, char *err)
 {
-	size_t i;
-
-	i = 0;
+	//size_t i;
+//
+	//i = 0;
+	(void)philos;
 	write(STDERR, err, ft_strlen(err));
-	while (philos[i])
-	{
-		free(philos[i]);
-		philos[i] = NULL;
-	}
+	//while (*philos != NULL)
+	//{
+		//free(&philos);
+		//*philos = NULL;
+		//philos++;
+	//}
 	exit(1);
 }
 
@@ -83,6 +85,7 @@ t_ph	*init_args(int ac, char **av)
 		return (NULL);
 	while (i < len)
 	{
+		philos[i].number_of_philos = len;
 		philos[i].number = i + 1;
 		argument = ft_atoi(av[2]);
 		if (argument < 0)

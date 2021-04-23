@@ -38,9 +38,10 @@ typedef struct	s_ph
 	size_t		time_to_eat;
 	size_t		time_to_sleep;
 	size_t		n_time_must_eat;
+	size_t		number_of_philos;
 }		t_ph;
 
 int	ft_atoi(const char *str);
-int	init_args(t_opt *opts, int ac, char **av);
+t_ph	*init_args(int ac, char **av);
 
 #endif

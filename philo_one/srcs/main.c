@@ -19,24 +19,25 @@ void	*ph_thread(void *arg)
 	return ((void *)1);
 }
 
-void	ph_start(t_opt *opts, pthread_t *philos, pthread_mutex_t *forks)
+void	ph_start(t_ph *philos, pthread_mutex_t *forks)
 {
 	size_t	len;
 	size_t	i;
 	int	err;
 	void	*ret;
 	
-	len = opts->number_of_philos;
+	len = philos[0].number_of_philos;
 	i = 0;
+	(void)forks;
 	while (i < len)
 	{
-		err = pthread_create(&philos[i], NULL, ph_thread, NULL);
+		err = pthread_create(&philos[i].thread, NULL, ph_thread, NULL);
 		if (err != 0)
 		{
 			write(STDERR, "Невозможно создать поток\n", 24); 
 			return ;
 		}
-		err = pthread_join(philos[i], &ret);
+		err = pthread_join(philos[i].thread, &ret);
 		if (err != 0)
 		{
 			write(STDERR, "Невозможно присоединить поток\n", 29); 
@@ -55,8 +56,7 @@ int	main(int ac, char **av)
 	if (ac < 5 || ac > 6)
 		return (write(STDERR, "Wrong number of arguments\n", 26) - 25);
 	philos = init_args(ac, av);
-	//TODO Сделать инициализацию вилок в виде правая и левая вилка
-	//forks = (pthread_mutex_t *)malloc(sizeof(pthread_t) * opts.number_of_philos);
-	//ph_start(&opts, philos, forks);
+	forks = (pthread_mutex_t *)malloc(sizeof(pthread_t) * philos[0].number_of_philos);
+	ph_start(philos, forks);
 	return (0);
 }
