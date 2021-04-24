@@ -6,20 +6,54 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:48:28 by sabra             #+#    #+#             */
-/*   Updated: 2021/04/22 23:04:10 by sabra            ###   ########.fr       */
+/*   Updated: 2021/04/24 20:49:24 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
 
-void	*ph_thread(void *arg)
+int	ph_life(t_ph *philo)
 {
-	write(STDOUT, "is sleeping\n", 12);
-	(void)arg;
-	return ((void *)1);
+	if (philo->time_to_die && philo->time_to_eat < philo->time_to_die)
+	{
+		if (philo->number == 1)
+		{
+			pthread_mutex_lock(&philo->forks[0]);
+			pthread_mutex_lock(&philo->forks[philo->number_of_philos - 1]);
+		}
+		else
+		{
+			pthread_mutex_lock(&philo->forks[philo->number]);
+			pthread_mutex_lock(&philo->forks[philo->number_of_philos - 2]);
+		}
+		printf("%zu philosopher is eating\n", philo->number);
+		usleep(philo->time_to_eat * 1000);
+		printf("%zu philosopher have eaten\n", philo->number);
+		if (philo->number == 1)
+		{
+			pthread_mutex_unlock(&philo->forks[0]);
+			pthread_mutex_unlock(&philo->forks[philo->number_of_philos - 1]);
+		}
+		else
+		{
+			pthread_mutex_unlock(&philo->forks[philo->number]);
+			pthread_mutex_unlock(&philo->forks[philo->number_of_philos - 2]);
+		}
+	}
+	return (1);
 }
 
-void	ph_start(t_ph *philos, pthread_mutex_t *forks)
+void	*ph_status(void *arg)
+{
+	t_ph *philo;
+
+	philo = (t_ph *)arg;
+	while (ph_life(philo))
+		;
+	return ((void *)DEAD);
+}
+
+void	ph_start(t_ph *philos, pthread_mutex_t *ar_forks)
 {
 	size_t	len;
 	size_t	i;
@@ -28,10 +62,10 @@ void	ph_start(t_ph *philos, pthread_mutex_t *forks)
 	
 	len = philos[0].number_of_philos;
 	i = 0;
-	(void)forks;
 	while (i < len)
 	{
-		err = pthread_create(&philos[i].thread, NULL, ph_thread, NULL);
+		philos[i].forks = ar_forks;
+		err = pthread_create(&philos[i].thread, NULL, ph_status, &philos[i]);
 		if (err != 0)
 		{
 			write(STDERR, "Невозможно создать поток\n", 24); 
@@ -52,11 +86,19 @@ int	main(int ac, char **av)
 {
 	t_ph		*philos;
 	pthread_mutex_t	*forks;
+	size_t		i;
 
 	if (ac < 5 || ac > 6)
 		return (write(STDERR, "Wrong number of arguments\n", 26) - 25);
 	philos = init_args(ac, av);
 	forks = (pthread_mutex_t *)malloc(sizeof(pthread_t) * philos[0].number_of_philos);
+	i = 0;
+	while (i < philos[0].number_of_philos)
+	{
+		//TODO Сделать защиту для инициализации
+		pthread_mutex_init(&forks[i], NULL);
+		i++;
+	}
 	ph_start(philos, forks);
 	return (0);
 }

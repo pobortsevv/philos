@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 17:14:05 by sabra             #+#    #+#             */
-/*   Updated: 2021/04/22 22:56:55 by sabra            ###   ########.fr       */
+/*   Updated: 2021/04/24 23:27:13 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 size_t	ft_strlen(const char *str)
 {
-	return (sizeof(str) / sizeof(char) - 1);
+	return ((sizeof(str)) / sizeof(char) - 1);
 }
 
 static int	ft_space(char sym)
@@ -99,7 +99,7 @@ t_ph	*init_args(int ac, char **av)
 		if (argument < 0)
 			init_exit(philos, "Wrong forth argument\n");
 		philos[i].time_to_sleep = (size_t)argument;
-		if (ac == 5)
+		if (ac == 6)
 		{
 			argument = ft_atoi(av[5]);
 			if (argument < 0)
