@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:48:28 by sabra             #+#    #+#             */
-/*   Updated: 2021/04/24 20:49:24 by sabra            ###   ########.fr       */
+/*   Updated: 2021/04/26 11:34:44 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	ph_life(t_ph *philo)
 		else
 		{
 			pthread_mutex_lock(&philo->forks[philo->number]);
-			pthread_mutex_lock(&philo->forks[philo->number_of_philos - 2]);
+			pthread_mutex_lock(&philo->forks[philo->number - 1]);
 		}
 		printf("%zu philosopher is eating\n", philo->number);
 		usleep(philo->time_to_eat * 1000);
@@ -37,8 +37,14 @@ int	ph_life(t_ph *philo)
 		else
 		{
 			pthread_mutex_unlock(&philo->forks[philo->number]);
-			pthread_mutex_unlock(&philo->forks[philo->number_of_philos - 2]);
+			pthread_mutex_unlock(&philo->forks[philo->number - 1]);
 		}
+		philo->time_to_die -= philo->time_to_eat;
+	}
+	else
+	{
+		printf("%zu philosopher is dead\n", philo->number);
+		return (0);
 	}
 	return (1);
 }
