@@ -6,46 +6,59 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:48:28 by sabra             #+#    #+#             */
-/*   Updated: 2021/04/26 11:34:44 by sabra            ###   ########.fr       */
+/*   Updated: 2021/04/27 21:54:26 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
 
+void	forks_lock(t_ph *philo)
+{
+	if (philo->number == 1)
+	{
+		pthread_mutex_lock(&philo->forks[0]);
+		pthread_mutex_lock(&philo->forks[philo->number_of_philos - 1]);
+	}
+	else
+	{
+		pthread_mutex_lock(&philo->forks[philo->number]);
+		pthread_mutex_lock(&philo->forks[philo->number - 1]);
+	}
+}
+
+void	forks_unlock(t_ph *philo)
+{
+	if (philo->number == 1)
+	{
+		pthread_mutex_unlock(&philo->forks[0]);
+		pthread_mutex_unlock(&philo->forks[philo->number_of_philos - 1]);
+	}
+	else
+	{
+		pthread_mutex_unlock(&philo->forks[philo->number]);
+		pthread_mutex_unlock(&philo->forks[philo->number - 1]);
+	}
+}
+
 int	ph_life(t_ph *philo)
 {
 	if (philo->time_to_die && philo->time_to_eat < philo->time_to_die)
 	{
-		if (philo->number == 1)
-		{
-			pthread_mutex_lock(&philo->forks[0]);
-			pthread_mutex_lock(&philo->forks[philo->number_of_philos - 1]);
-		}
-		else
-		{
-			pthread_mutex_lock(&philo->forks[philo->number]);
-			pthread_mutex_lock(&philo->forks[philo->number - 1]);
-		}
-		printf("%zu philosopher is eating\n", philo->number);
+		forks_lock(philo);
+		printf("%zu has taken a fork\n", philo->number);
+		printf("%zu has taken a fork\n", philo->number);
+		printf("%zu is eating\n", philo->number);
 		usleep(philo->time_to_eat * 1000);
-		printf("%zu philosopher have eaten\n", philo->number);
-		if (philo->number == 1)
-		{
-			pthread_mutex_unlock(&philo->forks[0]);
-			pthread_mutex_unlock(&philo->forks[philo->number_of_philos - 1]);
-		}
-		else
-		{
-			pthread_mutex_unlock(&philo->forks[philo->number]);
-			pthread_mutex_unlock(&philo->forks[philo->number - 1]);
-		}
-		philo->time_to_die -= philo->time_to_eat;
+		forks_unlock(philo);
+		philo->time_to_die = philo->time_to_die_reserv;
+		printf("%zu is sleeping\n", philo->number);
+		usleep(philo->time_to_sleep * 1000);
+		printf("%zu is thinking\n", philo->number);
+		usleep(philo->time_to_sleep * 1000);
+		philo->time_to_die -= philo->time_to_sleep;
 	}
 	else
-	{
-		printf("%zu philosopher is dead\n", philo->number);
-		return (0);
-	}
+		return (printf("%zu philosopher is dead\n", philo->number) * 0);
 	return (1);
 }
 
@@ -64,7 +77,6 @@ void	ph_start(t_ph *philos, pthread_mutex_t *ar_forks)
 	size_t	len;
 	size_t	i;
 	int	err;
-	void	*ret;
 	
 	len = philos[0].number_of_philos;
 	i = 0;
@@ -77,13 +89,12 @@ void	ph_start(t_ph *philos, pthread_mutex_t *ar_forks)
 			write(STDERR, "Невозможно создать поток\n", 24); 
 			return ;
 		}
-		err = pthread_join(philos[i].thread, &ret);
+		err = pthread_join(philos[i].thread, NULL);
 		if (err != 0)
 		{
 			write(STDERR, "Невозможно присоединить поток\n", 29); 
 			return ;
 		}
-		printf("Код выхода потока: %ld\nНомер потока: %ld\n", (long)ret, i + 1);
 		i++;
 	}
 }

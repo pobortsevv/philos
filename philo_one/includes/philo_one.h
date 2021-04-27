@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 18:18:21 by sabra             #+#    #+#             */
-/*   Updated: 2021/04/24 10:54:49 by sabra            ###   ########.fr       */
+/*   Updated: 2021/04/27 20:54:45 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ typedef struct	s_ph
 	size_t		time_to_sleep;
 	size_t		n_time_must_eat;
 	size_t		number_of_philos;
+	size_t		time_to_die_reserv;
 	pthread_mutex_t *forks;
 }		t_ph;
 
