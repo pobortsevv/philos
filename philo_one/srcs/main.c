@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:48:28 by sabra             #+#    #+#             */
-/*   Updated: 2021/04/27 21:54:26 by sabra            ###   ########.fr       */
+/*   Updated: 2021/04/28 13:17:33 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	ph_life(t_ph *philo)
 		printf("%zu is eating\n", philo->number);
 		usleep(philo->time_to_eat * 1000);
 		forks_unlock(philo);
-		philo->time_to_die = philo->time_to_die_reserv;
+		//philo->time_to_die = philo->time_to_die_reserv;
 		printf("%zu is sleeping\n", philo->number);
 		usleep(philo->time_to_sleep * 1000);
 		printf("%zu is thinking\n", philo->number);
@@ -89,7 +89,7 @@ void	ph_start(t_ph *philos, pthread_mutex_t *ar_forks)
 			write(STDERR, "Невозможно создать поток\n", 24); 
 			return ;
 		}
-		err = pthread_join(philos[i].thread, NULL);
+		err = pthread_detach(philos[i].thread);
 		if (err != 0)
 		{
 			write(STDERR, "Невозможно присоединить поток\n", 29); 
