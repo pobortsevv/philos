@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 17:14:05 by sabra             #+#    #+#             */
-/*   Updated: 2021/04/24 23:27:13 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/02 14:21:31 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,24 @@ void	init_exit(t_ph *philos, char *err)
 		//philos++;
 	//}
 	exit(1);
+}
+
+unsigned long	time_now(void)
+{
+	struct timeval	time;
+
+	gettimeofday(&time, NULL);
+	return ((time.tv_sec * (unsigned long)1000) + (time.tv_usec / 1000));
+}
+
+void			ft_usleep(int time)
+{
+	unsigned long end;
+
+	end = time_now() + time;
+	// Или пока не сдохнут
+	while (now() < end)
+		usleep(time);
 }
 
 t_ph	*init_args(int ac, char **av)
