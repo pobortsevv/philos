@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 18:18:21 by sabra             #+#    #+#             */
-/*   Updated: 2021/04/27 20:54:45 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/02 15:33:49 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <pthread.h>
+# include <sys/time.h>
 # define STDIN 0
 # define STDOUT 1
 # define STDERR 2

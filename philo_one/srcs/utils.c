@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 17:14:05 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/02 14:21:31 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/02 15:33:17 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,22 +52,6 @@ int	ft_atoi(const char *str)
 	return (result * sign);
 }
 
-void	init_exit(t_ph *philos, char *err)
-{
-	//size_t i;
-//
-	//i = 0;
-	(void)philos;
-	write(STDERR, err, ft_strlen(err));
-	//while (*philos != NULL)
-	//{
-		//free(&philos);
-		//*philos = NULL;
-		//philos++;
-	//}
-	exit(1);
-}
-
 unsigned long	time_now(void)
 {
 	struct timeval	time;
@@ -81,22 +65,19 @@ void			ft_usleep(int time)
 	unsigned long end;
 
 	end = time_now() + time;
-	// Или пока не сдохнут
-	while (now() < end)
+	while (time_now() < end) // Или пока не сдохнут
 		usleep(time);
 }
 
 t_ph	*init_args(int ac, char **av)
 {
-	int	argument;
-	size_t	len;
-	size_t	i;
+	int	len;
+	int	i;
 	t_ph	*philos;
 
-	argument = ft_atoi(av[1]);
-	if (argument < 0)
+	len = ft_atoi(av[1]);
+	if (len < 2)
 		return (NULL);
-	len = argument;
 	i = 0;
 	philos = (t_ph *)malloc(sizeof(t_ph) * len + 1);
 	if (!philos)
@@ -105,27 +86,16 @@ t_ph	*init_args(int ac, char **av)
 	{
 		philos[i].number_of_philos = len;
 		philos[i].number = i + 1;
-		argument = ft_atoi(av[2]);
-		if (argument < 0)
-			init_exit(philos, "Wrong second argument\n");
-		philos[i].time_to_die = (size_t)argument;
-		argument = ft_atoi(av[3]);
-		if (argument < 0)
-			init_exit(philos, "Wrong third argument\n");
-		philos[i].time_to_eat = (size_t)argument;
-		argument = ft_atoi(av[4]);
-		if (argument < 0)
-			init_exit(philos, "Wrong forth argument\n");
-		philos[i].time_to_sleep = (size_t)argument;
+		philos[i].time_to_die = ft_atoi(av[2]);
+		philos[i].time_to_eat = ft_atoi(av[3]);
+		philos[i].time_to_sleep = ft_atoi(av[4]);
 		if (ac == 6)
-		{
-			argument = ft_atoi(av[5]);
-			if (argument < 0)
-				init_exit(philos, "Wrong fifth argument\n");
-			philos[i].n_time_must_eat = (size_t)argument;
-		}
+			philos[i].n_time_must_eat = ft_atoi(av[5]);
 		else
 			philos[i].n_time_must_eat = -1;
+		if (philos[i].time_to_die < 0 || philos[i].time_to_eat < 0
+				|| philos[i].time_to_sleep < 0)
+			return (NULL);
 		i++;
 	}
 	return (philos);

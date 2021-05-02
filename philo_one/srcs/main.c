@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:48:28 by sabra             #+#    #+#             */
-/*   Updated: 2021/04/28 13:17:33 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/02 15:36:24 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,8 @@ int	main(int ac, char **av)
 	if (ac < 5 || ac > 6)
 		return (write(STDERR, "Wrong number of arguments\n", 26) - 25);
 	philos = init_args(ac, av);
+	if (!philos)
+		return (write(STDERR, "Wrong arguments\n", 16) - 15);
 	forks = (pthread_mutex_t *)malloc(sizeof(pthread_t) * philos[0].number_of_philos);
 	i = 0;
 	while (i < philos[0].number_of_philos)
