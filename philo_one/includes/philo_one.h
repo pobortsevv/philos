@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 18:18:21 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/03 10:58:03 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/03 11:37:08 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,25 +23,30 @@
 # define STDERR 2
 # define DEAD 0
 
-typedef struct	s_all
-{
-	size_t		t_to_die;
-	size_t		t_to_eat;
-	size_t		t_to_sleep;
-	size_t		n_of_philos;
-	pthread_mutex_t *forks;
-
-}		t_all;
-
 typedef struct	s_ph
 {
-	size_t		number;
+	int		number;
 	pthread_t	thread;
 	int		right;
 	int		left;
 }		t_ph;
 
+typedef struct	s_all
+{
+	int		t_to_die;
+	int		t_to_eat;
+	int		t_to_sleep;
+	int		n_of_philos;
+	int		nt_must_eat;
+	pthread_mutex_t *forks;
+	pthread_mutex_t	print;
+	pthread_mutex_t death;
+	t_ph		*philos;
+}		t_all;
+
+extern	t_all	g_all;
+
 int	ft_atoi(const char *str);
-t_ph	*init_args(int ac, char **av);
+int	init_args(int ac, char **av);
 
 #endif

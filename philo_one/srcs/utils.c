@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 17:14:05 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/02 15:33:17 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/03 11:38:05 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,34 +69,25 @@ void			ft_usleep(int time)
 		usleep(time);
 }
 
-t_ph	*init_args(int ac, char **av)
+int	init_args(int ac, char **av)
 {
-	int	len;
-	int	i;
-	t_ph	*philos;
-
-	len = ft_atoi(av[1]);
-	if (len < 2)
-		return (NULL);
-	i = 0;
-	philos = (t_ph *)malloc(sizeof(t_ph) * len + 1);
-	if (!philos)
-		return (NULL);
-	while (i < len)
+	g_all.n_of_philos = ft_atoi(av[1]);
+	g_all.t_to_die = ft_atoi(av[2]);
+	g_all.t_to_eat = ft_atoi(av[3]);
+	g_all.t_to_sleep = ft_atoi(av[4]);
+	if (ac == 6)
+		g_all.nt_must_eat = ft_atoi(av[5]);
+	else
+		g_all.nt_must_eat = -1;
+	g_all.philos = (t_ph *)malloc(sizeof(t_ph) * g_all.n_of_philos + 1);
+	if (!g_all.philos)
+		return (1);
+	if (g_all.n_of_philos < 2 || g_all.t_to_die < 0
+			|| g_all.t_to_eat < 0 || g_all.t_to_sleep < 0
+			|| (ac  == 6 && g_all.nt_must_eat < 0))
 	{
-		philos[i].number_of_philos = len;
-		philos[i].number = i + 1;
-		philos[i].time_to_die = ft_atoi(av[2]);
-		philos[i].time_to_eat = ft_atoi(av[3]);
-		philos[i].time_to_sleep = ft_atoi(av[4]);
-		if (ac == 6)
-			philos[i].n_time_must_eat = ft_atoi(av[5]);
-		else
-			philos[i].n_time_must_eat = -1;
-		if (philos[i].time_to_die < 0 || philos[i].time_to_eat < 0
-				|| philos[i].time_to_sleep < 0)
-			return (NULL);
-		i++;
+		free(g_all.philos);
+		return (1);
 	}
-	return (philos);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:48:28 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/03 11:01:02 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/03 11:38:55 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,23 +75,21 @@ t_all	g_all;
 
 int	main(int ac, char **av)
 {
-	t_ph		*philos;
-	pthread_mutex_t	*forks;
-	size_t		i;
+	int		i;
 
-	if (ac < 5 || ac > 6)
-		return (write(STDERR, "Wrong number of arguments\n", 26) - 25);
-	//philos = init_args(ac, av);
-	//if (!philos)
-		//return (write(STDERR, "Wrong arguments\n", 16) - 15);
-	//forks = (pthread_mutex_t *)malloc(sizeof(pthread_t) * philos[0].number_of_philos);
-	//i = 0;
-	//while (i < philos[0].number_of_philos)
-	//{
-		////TODO Сделать защиту для инициализации
-		//pthread_mutex_init(&forks[i], NULL);
-		//i++;
-	//}
+	if (ac < 5 || ac > 6 || init_args(ac, av))
+		return (write(STDERR, "Wrong arguments\n", 16) - 15);
+	g_all.forks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * g_all.n_of_philos);
+	i = 0;
+	while (i < g_all.n_of_philos)
+	{
+		if (pthread_mutex_init(&g_all.forks[i], NULL) != 0)
+		{
+			free(g_all.forks);
+			return (write(STDERR, "Error with malloc\n", 17) - 16);
+		}
+		i++;
+	}
 	//ph_start(philos, forks);
 	return (0);
 }
