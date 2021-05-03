@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:48:28 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/03 12:01:33 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/03 13:08:15 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,42 +36,34 @@ t_all	g_all;
 	//return (1);
 //}
 
-//void	*ph_status(void *arg)
-//{
-	//t_ph *philo;
-//
-	//philo = (t_ph *)arg;
+void	*ph_routine(void *arg)
+{
+	t_ph *philo;
+
+	philo = (t_ph *)arg;
 	//while (ph_life(philo))
 		//;
-	//return ((void *)DEAD);
-//}
-//
-//void	ph_start(t_ph *philos, pthread_mutex_t *ar_forks)
-//{
-	//size_t	len;
-	//size_t	i;
-	//int	err;
-//	
-	//len = philos[0].number_of_philos;
-	//i = 0;
-	//while (i < len)
-	//{
-		//philos[i].forks = ar_forks;
-		//err = pthread_create(&philos[i].thread, NULL, ph_status, &philos[i]);
-		//if (err != 0)
-		//{
-			//write(STDERR, "Невозможно создать поток\n", 24); 
-			//return ;
-		//}
-		//err = pthread_detach(philos[i].thread);
-		//if (err != 0)
-		//{
-			//write(STDERR, "Невозможно присоединить поток\n", 29); 
-			//return ;
-		//}
-		//i++;
-	//}
-//}
+	return ((void *)DEAD);
+}
+
+void	ph_start(int i, int j, int k)
+{
+	while (++i < g_all.n_of_philos)
+	{
+		g_all.philos[i].number = i + 1;
+		g_all.philos[i].right = (i + 1) % g_all.n_of_philos;
+		g_all.philos[i].left = i;
+		g_all.philos[i].eat_count = 0;
+	}
+	while (++j < g_all.n_of_philos)
+	{
+		if (pthread_create(&g_all.philos[i].thread, NULL, ph_routine,
+					(void *)(&g_all.philos[i])) != 0)
+			return ;
+	}
+	while (++k < g_all.n_of_philos)
+		pthread_join(g_all.philos[i].thread, NULL);
+}
 
 int	main(int ac, char **av)
 {
@@ -91,7 +83,6 @@ int	main(int ac, char **av)
 		i++;
 	}
 	g_all.start = time_now();
-	printf("%lu\n", g_all.start);
-	//ph_start(philos, forks);
+	ph_start(-1, -1, -1);
 	return (0);
 }
