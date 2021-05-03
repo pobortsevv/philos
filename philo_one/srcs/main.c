@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:48:28 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/03 11:38:55 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/03 12:01:33 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,8 @@ int	main(int ac, char **av)
 		}
 		i++;
 	}
+	g_all.start = time_now();
+	printf("%lu\n", g_all.start);
 	//ph_start(philos, forks);
 	return (0);
 }

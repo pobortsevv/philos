@@ -6,22 +6,15 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 17:14:05 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/03 11:38:05 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/03 12:01:56 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
 
 size_t	ft_strlen(const char *str)
-{
+{ 
 	return ((sizeof(str)) / sizeof(char) - 1);
-}
-
-static int	ft_space(char sym)
-{
-	if (sym == ' ' || (sym >= 9 && sym <= 13))
-		return (1);
-	return (0);
 }
 
 int	ft_atoi(const char *str)
@@ -33,7 +26,7 @@ int	ft_atoi(const char *str)
 	i = 0;
 	sign = 1;
 	result = 0;
-	while (ft_space(str[i]))
+	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
 		i++;
 	if (str[i] == '+' || str[i] == '-')
 	{
@@ -57,7 +50,7 @@ unsigned long	time_now(void)
 	struct timeval	time;
 
 	gettimeofday(&time, NULL);
-	return ((time.tv_sec * (unsigned long)1000) + (time.tv_usec / 1000));
+	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
 
 void			ft_usleep(int time)
@@ -67,6 +60,14 @@ void			ft_usleep(int time)
 	end = time_now() + time;
 	while (time_now() < end) // Или пока не сдохнут
 		usleep(time);
+}
+
+void	ph_print(char *str, t_ph philo)
+{
+	pthread_mutex_lock(&g_all.print);
+	printf("%lu %d %s\n", (time_now() - g_all.start), philo.number,
+			str);
+	pthread_mutex_unlock(&g_all.print);
 }
 
 int	init_args(int ac, char **av)
@@ -89,5 +90,7 @@ int	init_args(int ac, char **av)
 		free(g_all.philos);
 		return (1);
 	}
+	pthread_mutex_init(&g_all.print, NULL);
+	pthread_mutex_init(&g_all.death, NULL);
 	return (0);
 }
