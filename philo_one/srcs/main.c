@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:48:28 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/04 19:35:16 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/05 00:28:38 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,19 +51,22 @@ int	ph_life(t_ph *philo)
 
 void	*ph_routine(void *arg)
 {
-	t_ph *philo;
+	int  *i;
 
-	philo = (t_ph *)arg;
+	i = (int *)arg;
 	g_all.start = time_now();
-	philo->die_time_reserv = philo->t_to_die;
-	philo->wait_time = time_now();
-	while (ph_life(philo))
+	g_all.philos[*i].die_time_reserv = g_all.philos[*i].t_to_die;
+	g_all.philos[*i].wait_time = time_now();
+	while (ph_life(&g_all.philos[*i]))
 		;
 	return ((void *)DEAD);
 }
 
 void	ph_start(int i, int j, int k)
 {
+	int	*index;
+
+	index = NULL;
 	while (++i < g_all.n_of_philos)
 	{
 		g_all.philos[i].number = i + 1;
@@ -74,8 +77,9 @@ void	ph_start(int i, int j, int k)
 	}
 	while (++j < g_all.n_of_philos)
 	{
+		*index = j;
 		if (pthread_create(&g_all.philos[i].thread, NULL, ph_routine,
-					(void *)(&g_all.philos[i])) != 0)
+					(void *)index) != 0)
 			return ;
 	}
 	while (++k < g_all.n_of_philos)
