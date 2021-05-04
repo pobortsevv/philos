@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 17:14:05 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/03 12:01:56 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/04 19:33:39 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,15 @@ void			ft_usleep(int time)
 		usleep(time);
 }
 
-void	ph_print(char *str, t_ph philo)
+int	ph_print(char *str, int number)
 {
+	int count;
+
 	pthread_mutex_lock(&g_all.print);
-	printf("%lu %d %s\n", (time_now() - g_all.start), philo.number,
+	count = printf("%lu %d %s\n", (time_now() - g_all.start), number,
 			str);
 	pthread_mutex_unlock(&g_all.print);
+	return (count);
 }
 
 int	init_args(int ac, char **av)
