@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:48:28 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/05 10:38:20 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/05 10:58:07 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ int	ph_life(t_ph *philo)
 {
 	pthread_mutex_lock(&g_all.forks[philo->right]);
 	ph_print("has taken a fork", philo->number);
-	//pthread_mutex_lock(&g_all.forks[philo->left]);
-	//ph_print("has taken a fork", philo->number);
+	pthread_mutex_lock(&g_all.forks[philo->left]);
+	ph_print("has taken a fork", philo->number);
 	philo->t_to_die -= (time_now() - philo->wait_time);
 	ph_print("is eating", philo->number);
 	philo->wait_time = time_now();
@@ -28,7 +28,7 @@ int	ph_life(t_ph *philo)
 	pthread_mutex_unlock(&g_all.forks[philo->left]);
 	philo->t_to_die -= (time_now() - philo->wait_time);
 	if (philo->t_to_die < (int)(time_now() - g_all.start))
-		return (ph_print("died\n", philo->number) * 0);
+		return (ph_print("\033[0;31m\033[1mdied \033[0m", philo->number) * 0);
 	//if (philo->time_to_die && philo->time_to_eat < philo->time_to_die)
 	//{
 		//forks_lock(philo);
@@ -59,6 +59,7 @@ void	*ph_routine(void *arg)
 	g_all.philos[i].wait_time = time_now();
 	while (ph_life(&g_all.philos[i]))
 		;
+	exit(0);
 	return ((void *)DEAD);
 }
 
