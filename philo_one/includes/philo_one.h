@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 18:18:21 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/04 19:30:53 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/05 16:11:47 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ extern	t_all	g_all;
 int	ft_atoi(const char *str);
 int	init_args(int ac, char **av);
 unsigned long	time_now(void);
-int	ph_print(char *str, int number);
+int	ph_print(char *str, int number, int status);
 void	ft_usleep(int time);
 
 #endif
