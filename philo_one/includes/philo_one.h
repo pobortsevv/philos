@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   philo_one.h                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/18 18:18:21 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/06 00:58:34 by sabra            ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef OPTIONS_H
 # define OPTIONS_H
 
@@ -46,7 +34,6 @@ typedef struct	s_all
 	unsigned long	start;
 	pthread_mutex_t *forks;
 	pthread_mutex_t	print;
-	pthread_mutex_t death;
 	t_ph		*philos;
 }		t_all;
 
@@ -57,5 +44,6 @@ int	init_args(int ac, char **av);
 unsigned long	time_now(void);
 int	ph_print(char *str, int number, int status);
 void	ft_usleep(int time);
+void	death_exit(void);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:48:28 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/06 00:58:31 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/06 01:29:21 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,12 @@ int	ph_life(t_ph *philo)
 	philo->wait_time = time_now();
 	philo->t_to_die = philo->die_time_reserv;
 	usleep(g_all.t_to_eat * 1000);
+	philo->eat_count++;
 	pthread_mutex_unlock(&g_all.forks[philo->right]);
 	pthread_mutex_unlock(&g_all.forks[philo->left]);
 	philo->t_to_die -= (time_now() - philo->wait_time);
-	if (philo->t_to_die < (int)(time_now() - philo->wait_time))
+	if (philo->t_to_die < (int)(time_now() - philo->wait_time)
+				|| philo->eat_count == g_all.nt_must_eat)
 		return (ph_print("\033[0;31m\033[1mdied \033[0m", philo->number, 0) * 0);
 	ph_print("is sleeping", philo->number, 1);
 	philo->wait_time = time_now();
@@ -41,7 +43,7 @@ int	ph_life(t_ph *philo)
 
 void	*ph_routine(void *arg)
 {
-	size_t  i;
+	size_t	i;
 
 	i = (size_t)arg;
 	g_all.start = time_now();
@@ -51,7 +53,7 @@ void	*ph_routine(void *arg)
 		usleep(5);
 	while (ph_life(&g_all.philos[i]))
 		;
-	exit(0);
+	death_exit();
 	return ((void *)DEAD);
 }
 
@@ -68,7 +70,7 @@ void	ph_start(int i, int j, int k)
 	while (++j < g_all.n_of_philos)
 	{
 		if (pthread_create(&g_all.philos[i].thread, NULL, ph_routine,
-					(void *)(size_t)j) != 0)
+				(void *)(size_t)j) != 0)
 			return ;
 	}
 	while (++k < g_all.n_of_philos)
@@ -81,7 +83,8 @@ int	main(int ac, char **av)
 
 	if (ac < 5 || ac > 6 || init_args(ac, av))
 		return (write(STDERR, "Wrong arguments\n", 16) - 15);
-	g_all.forks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * g_all.n_of_philos);
+	g_all.forks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t)
+			* g_all.n_of_philos);
 	i = 0;
 	while (i < g_all.n_of_philos)
 	{

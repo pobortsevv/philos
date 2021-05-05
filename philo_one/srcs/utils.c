@@ -6,15 +6,26 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 17:14:05 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/05 16:11:27 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/06 01:49:18 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
 
-size_t	ft_strlen(const char *str)
-{ 
-	return ((sizeof(str)) / sizeof(char) - 1);
+void	death_exit(void)
+{
+	int i;
+
+	i = g_all.n_of_philos - 1;
+	pthread_mutex_destroy(&g_all.print);
+	while (i >= 0)
+	{
+		pthread_mutex_destroy(&g_all.forks[i]);
+		i--;
+	}
+	free(g_all.forks);
+	free(g_all.philos);
+	exit(0);	
 }
 
 int	ft_atoi(const char *str)
@@ -53,18 +64,18 @@ unsigned long	time_now(void)
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
 
-void			ft_usleep(int time)
+void	ft_usleep(int time)
 {
-	unsigned long end;
+	unsigned long	end;
 
 	end = time_now() + time;
-	while (time_now() < end) // Или пока не сдохнут
+	while (time_now() < end)
 		usleep(time);
 }
 
 int	ph_print(char *str, int number, int status)
 {
-	int count;
+	int	count;
 
 	pthread_mutex_lock(&g_all.print);
 	count = printf("%lu %d %s\n", (time_now() - g_all.start), number,
@@ -89,13 +100,12 @@ int	init_args(int ac, char **av)
 	if (!g_all.philos)
 		return (1);
 	if (g_all.n_of_philos < 2 || g_all.t_to_die < 0
-			|| g_all.t_to_eat < 0 || g_all.t_to_sleep < 0
-			|| (ac  == 6 && g_all.nt_must_eat < 0))
+		|| g_all.t_to_eat < 0 || g_all.t_to_sleep < 0
+		|| (ac == 6 && g_all.nt_must_eat < 0))
 	{
 		free(g_all.philos);
 		return (1);
 	}
 	pthread_mutex_init(&g_all.print, NULL);
-	pthread_mutex_init(&g_all.death, NULL);
 	return (0);
 }
