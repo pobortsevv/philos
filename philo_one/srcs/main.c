@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:48:28 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/05 17:24:50 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/05 20:52:59 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,23 +29,6 @@ int	ph_life(t_ph *philo)
 	philo->t_to_die -= (time_now() - philo->wait_time);
 	if (philo->t_to_die < (int)(time_now() - philo->wait_time))
 		return (ph_print("\033[0;31m\033[1mdied \033[0m", philo->number, 0) * 0);
-	//if (philo->time_to_die && philo->time_to_eat < philo->time_to_die)
-	//{
-		//forks_lock(philo);
-		//printf("%zu has taken a fork\n", philo->number);
-		//printf("%zu has taken a fork\n", philo->number);
-		//printf("%zu is eating\n", philo->number);
-		//usleep(philo->time_to_eat * 1000);
-		//forks_unlock(philo);
-		////philo->time_to_die = philo->time_to_die_reserv;
-		//printf("%zu is sleeping\n", philo->number);
-		//usleep(philo->time_to_sleep * 1000);
-		//printf("%zu is thinking\n", philo->number);
-		//usleep(philo->time_to_sleep * 1000);
-		//philo->time_to_die -= philo->time_to_sleep;
-	//}
-	//else
-		//return (printf("%zu philosopher is dead\n", philo->number) * 0);
 	return (1);
 }
 
