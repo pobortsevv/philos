@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:48:28 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/05 00:28:38 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/05 10:38:20 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@ t_all	g_all;
 int	ph_life(t_ph *philo)
 {
 	pthread_mutex_lock(&g_all.forks[philo->right]);
-	ph_print("has taken a fork\n", philo->number);
-	pthread_mutex_lock(&g_all.forks[philo->left]);
-	ph_print("has taken a fork\n", philo->number);
+	ph_print("has taken a fork", philo->number);
+	//pthread_mutex_lock(&g_all.forks[philo->left]);
+	//ph_print("has taken a fork", philo->number);
 	philo->t_to_die -= (time_now() - philo->wait_time);
-	ph_print("is eating\n", philo->number);
+	ph_print("is eating", philo->number);
 	philo->wait_time = time_now();
 	ft_usleep(g_all.t_to_eat);
 	pthread_mutex_unlock(&g_all.forks[philo->right]);
@@ -51,22 +51,19 @@ int	ph_life(t_ph *philo)
 
 void	*ph_routine(void *arg)
 {
-	int  *i;
+	size_t  i;
 
-	i = (int *)arg;
+	i = (size_t)arg;
 	g_all.start = time_now();
-	g_all.philos[*i].die_time_reserv = g_all.philos[*i].t_to_die;
-	g_all.philos[*i].wait_time = time_now();
-	while (ph_life(&g_all.philos[*i]))
+	g_all.philos[i].die_time_reserv = g_all.philos[i].t_to_die;
+	g_all.philos[i].wait_time = time_now();
+	while (ph_life(&g_all.philos[i]))
 		;
 	return ((void *)DEAD);
 }
 
 void	ph_start(int i, int j, int k)
 {
-	int	*index;
-
-	index = NULL;
 	while (++i < g_all.n_of_philos)
 	{
 		g_all.philos[i].number = i + 1;
@@ -77,9 +74,8 @@ void	ph_start(int i, int j, int k)
 	}
 	while (++j < g_all.n_of_philos)
 	{
-		*index = j;
 		if (pthread_create(&g_all.philos[i].thread, NULL, ph_routine,
-					(void *)index) != 0)
+					(void *)(size_t)j) != 0)
 			return ;
 	}
 	while (++k < g_all.n_of_philos)

@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 17:14:05 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/04 23:57:35 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/05 10:36:50 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ unsigned long	time_now(void)
 	struct timeval	time;
 
 	gettimeofday(&time, NULL);
-	return ((time.tv_sec * (unsigned long)1000) + (time.tv_usec / 1000));
+	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
 
 void			ft_usleep(int time)
