@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:48:28 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/06 15:21:15 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/07 00:26:57 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,16 @@ int	ph_life(t_ph *philo)
 	philo->eat_count++;
 	sem_post(g_all.forks);
 	sem_post(g_all.forks);
-	philo->t_to_die -= (time_now() - philo->wait_time);
 	if (philo->t_to_die < (int)(time_now() - philo->wait_time)
 				|| philo->eat_count == g_all.nt_must_eat)
 		return (ph_print("\033[0;31m\033[1mdied \033[0m", philo->number, 0) * 0);
+	philo->t_to_die -= (time_now() - philo->wait_time);
 	ph_print("is sleeping", philo->number, 1);
 	philo->wait_time = time_now();
 	usleep(g_all.t_to_sleep * 1000);
-	philo->t_to_die -= (time_now() - philo->wait_time);
 	if (philo->t_to_die < (int)(time_now() - philo->wait_time))
 		return (ph_print("\033[0;31m\033[1mdied \033[0m", philo->number, 0) * 0);
+	philo->t_to_die -= (time_now() - philo->wait_time);
 	ph_print("is thinking", philo->number, 1);
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 17:14:05 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/06 15:27:03 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/06 22:16:00 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,10 @@
 
 void	death_exit(void)
 {
-	sem_unlink("forks");
 	sem_unlink("print");
-	//free(g_all.forks);
-	sem_post(g_all.print);
-	sem_close(g_all.forks);
-	sem_close(g_all.print);
+	sem_unlink("forks");
 	free(g_all.philos);
-	exit(0);	
+	exit(0);
 }
 
 int	ft_atoi(const char *str)

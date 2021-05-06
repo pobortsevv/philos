@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 17:14:05 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/06 01:49:18 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/07 00:44:06 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,11 +66,11 @@ unsigned long	time_now(void)
 
 void	ft_usleep(int time)
 {
-	unsigned long	end;
+	unsigned long start;
 
-	end = time_now() + time;
-	while (time_now() < end)
-		usleep(time);
+	start = time_now();
+	while ((time_now() - start) < (unsigned long)time)
+		usleep(100);
 }
 
 int	ph_print(char *str, int number, int status)

@@ -1,5 +1,5 @@
-#ifndef OPTIONS_H
-# define OPTIONS_H
+#ifndef PHILO_ONE_H
+# define PHILO_ONE_H
 
 # include <stdio.h>
 # include <stdlib.h>
@@ -12,16 +12,16 @@
 # define STDERR 2
 # define DEAD 0
 
-typedef struct	s_ph
+typedef struct s_ph
 {
 	int		number;
-	pthread_t	thread;
 	int		right;
 	int		left;
 	int		eat_count;
 	int		t_to_die;
 	int		die_time_reserv;
 	unsigned long	wait_time;
+	pthread_t	thread;
 }		t_ph;
 
 typedef struct	s_all
