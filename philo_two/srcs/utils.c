@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 17:14:05 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/06 15:21:36 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/06 15:27:03 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,10 @@ void	death_exit(void)
 {
 	sem_unlink("forks");
 	sem_unlink("print");
-	sem_close(g_all.print);
-	sem_close(g_all.forks);
 	//free(g_all.forks);
+	sem_post(g_all.print);
+	sem_close(g_all.forks);
+	sem_close(g_all.print);
 	free(g_all.philos);
 	exit(0);	
 }
@@ -76,7 +77,7 @@ int	ph_print(char *str, int number, int status)
 	count = printf("%lu %d %s\n", (time_now() - g_all.start), number,
 			str);
 	if (status == 0)
-		return (count);
+		death_exit();
 	sem_post(g_all.print);
 	return (count);
 }
