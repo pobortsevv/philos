@@ -22,6 +22,7 @@ typedef struct s_ph
 	int		die_time_reserv;
 	unsigned long	wait_time;
 	pthread_t	thread;
+	pthread_t	checker;
 }		t_ph;
 
 typedef struct	s_all
