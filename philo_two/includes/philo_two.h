@@ -30,6 +30,7 @@ typedef struct	s_all
 	int		t_to_sleep;
 	int		n_of_philos;
 	int		nt_must_eat;
+	int		dead;	
 	unsigned long	start;
 	sem_t		*forks;
 	sem_t		*print;

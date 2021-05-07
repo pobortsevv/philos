@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 17:14:05 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/07 23:25:44 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/07 23:58:42 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	death_exit(void)
 	pthread_mutex_destroy(&g_all.print);
 	free(g_all.forks);
 	free(g_all.philos);
-	exit(0);	
+	exit(0);
 }
 
 int	ft_atoi(const char *str)
@@ -81,7 +81,10 @@ int	ph_print(char *str, int number, int status)
 	count = printf("%lu %d %s\n", (time_now() - g_all.start), number,
 			str);
 	if (status == 0)
+	{
 		death_exit();
+		return (0);
+	}
 	pthread_mutex_unlock(&g_all.print);
 	return (count);
 }
