@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:48:28 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/07 23:45:30 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/09 12:36:57 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,19 +20,34 @@ int	ph_life(t_ph *philo)
 	pthread_mutex_lock(&g_all.forks[philo->left]);
 	ph_print("has taken a fork", philo->number, 1);
 	ph_print("has taken a fork", philo->number, 1);
-	philo->wait_time = time_now();
 	ph_print("is eating", philo->number, 1);
+	philo->wait_time = time_now();
 	usleep(g_all.t_to_eat * 1000);
 	pthread_mutex_unlock(&g_all.forks[philo->right]);
 	pthread_mutex_unlock(&g_all.forks[philo->left]);
 	philo->eat_count++;
-	if (philo->t_to_die < (int)(time_now() - philo->wait_time) 
-				|| philo->eat_count == g_all.nt_must_eat)
-		return (ph_print("\033[0;31m\033[1mdied \033[0m", philo->number, 0) * 0);
+	//if (philo->t_to_die < (int)(time_now() - philo->wait_time) 
+				//|| philo->eat_count == g_all.nt_must_eat)
+		//return (ph_print("\033[0;31m\033[1mdied \033[0m", philo->number, 0) * 0);
 	ph_print("is sleeping", philo->number, 1);
 	usleep(g_all.t_to_sleep * 1000);
 	ph_print("is thinking", philo->number, 1);
 	return (1);
+}
+
+void	*ph_checker(void *arg)
+{
+	t_ph	*philo;
+
+	philo = (t_ph *)arg;
+	while (1)
+	{
+		usleep(100);
+		if (philo->t_to_die < (int)(time_now() - philo->wait_time) 
+					|| philo->eat_count == g_all.nt_must_eat)
+			ph_print("\033[0;31m\033[1mdied \033[0m", philo->number, 0);
+	}
+	return ((void *)0);
 }
 
 void	*ph_routine(void *arg)
@@ -43,6 +58,10 @@ void	*ph_routine(void *arg)
 	g_all.start = time_now();
 	philo->die_time_reserv = philo->t_to_die;
 	philo->wait_time = time_now();
+	if (pthread_create(&philo->checker, NULL, ph_checker,
+			(void *)(philo)) != 0)
+		return ((void *)0);
+	pthread_detach(philo->checker);
 	if (philo->number % 2 == 0)
 		usleep(1);
 	while (ph_life(philo))
