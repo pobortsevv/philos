@@ -24,6 +24,8 @@ int	ph_life(t_ph *philo)
 	philo->wait_time = time_now();
 	usleep(g_all.t_to_eat * 1000);
 	philo->eat_count++;
+	if (philo->eat_count == g_all.nt_must_eat)
+		ph_print("\033[0;31m\033[1mdied \033[0m", philo->number, 0);
 	sem_post(g_all.forks);
 	sem_post(g_all.forks);
 	ph_print("is sleeping", philo->number, 1);
@@ -41,10 +43,9 @@ void	*ph_checker(void *arg)
 	usleep(10);
 	while (1)
 	{
-		usleep(3);
-		if ((unsigned long)g_all.t_to_die < (time_now() - philo->wait_time)
-					|| philo->eat_count == g_all.nt_must_eat)
+		if ((unsigned long)g_all.t_to_die < (time_now() - philo->wait_time))
 			ph_print("\033[0;31m\033[1mdied \033[0m", philo->number, 0);
+		usleep(3);
 	}
 	return ((void *)0);
 }

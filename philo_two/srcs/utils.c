@@ -88,7 +88,7 @@ int	init_args(int ac, char **av)
 		g_all.nt_must_eat = ft_atoi(av[5]);
 	else
 		g_all.nt_must_eat = -1;
-	g_all.philos = (t_ph *)malloc(sizeof(t_ph) * g_all.n_of_philos + 1);
+	g_all.philos = (t_ph *)malloc(sizeof(t_ph) * g_all.n_of_philos);
 	if (!g_all.philos)
 		return (1);
 	if (g_all.n_of_philos < 2 || g_all.t_to_die < 0
