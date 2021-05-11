@@ -18,7 +18,6 @@ typedef struct s_ph
 	int		right;
 	int		left;
 	int		eat_count;
-	int		t_to_die;
 	int		die_time_reserv;
 	unsigned long	wait_time;
 	pthread_t	thread;
