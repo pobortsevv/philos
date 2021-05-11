@@ -16,11 +16,12 @@
 typedef struct	s_ph
 {
 	int		number;
-	pthread_t	thread;
 	int		eat_count;
 	int		t_to_die;
 	int		die_time_reserv;
 	unsigned long	wait_time;
+	pthread_t	thread;
+	pthread_t	checker;
 }		t_ph;
 
 typedef struct	s_all

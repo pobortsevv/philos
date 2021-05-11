@@ -26,13 +26,27 @@ int	ph_life(t_ph *philo)
 	philo->eat_count++;
 	sem_post(g_all.forks);
 	sem_post(g_all.forks);
-	if (philo->t_to_die < (int)(time_now() - philo->wait_time)
-				|| philo->eat_count == g_all.nt_must_eat)
-		return (ph_print("\033[0;31m\033[1mdied \033[0m", philo->number, 0));
 	ph_print("is sleeping", philo->number, 1);
 	usleep(g_all.t_to_sleep * 1000);
 	ph_print("is thinking", philo->number, 1);
 	return (1);
+}
+
+void	*ph_checker(void *arg)
+{
+	t_ph	*philo;
+
+	philo = (t_ph *)arg;
+	philo->wait_time = time_now();
+	usleep(10);
+	while (1)
+	{
+		usleep(3);
+		if ((unsigned long)g_all.t_to_die < (time_now() - philo->wait_time)
+					|| philo->eat_count == g_all.nt_must_eat)
+			ph_print("\033[0;31m\033[1mdied \033[0m", philo->number, 0);
+	}
+	return ((void *)0);
 }
 
 void	*ph_routine(void *arg)
@@ -40,11 +54,12 @@ void	*ph_routine(void *arg)
 	t_ph *philo;
 
 	philo = (t_ph *)arg;
-	philo->die_time_reserv = philo->t_to_die;
-	philo->wait_time = time_now();
-	g_all.start = time_now();
+	if (pthread_create(&philo->checker, NULL, ph_checker,
+			(void *)(philo)) != 0)
+		return ((void *)0);
+	pthread_detach(philo->checker);
 	if (philo->number % 2 == 0)
-		usleep(1);
+		usleep(1000 * (g_all.t_to_eat * 0.5));
 	while (ph_life(philo))
 		;
 	return ((void *)DEAD);
@@ -60,6 +75,7 @@ void	ph_start(int i, int j, int k)
 	}
 	while (++j < g_all.n_of_philos)
 	{
+		g_all.start = time_now();
 		if (pthread_create(&g_all.philos[j].thread, NULL, ph_routine,
 				(void *)(&g_all.philos[j])) != 0)
 			return ;
