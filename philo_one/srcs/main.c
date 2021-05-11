@@ -17,8 +17,8 @@ t_all	g_all;
 int	ph_life(t_ph *philo)
 {
 	pthread_mutex_lock(&g_all.forks[philo->right]);
-	pthread_mutex_lock(&g_all.forks[philo->left]);
 	ph_print("has taken a fork", philo->number, 1);
+	pthread_mutex_lock(&g_all.forks[philo->left]);
 	ph_print("has taken a fork", philo->number, 1);
 	philo->wait_time = time_now();
 	ph_print("is eating", philo->number, 1);
@@ -42,7 +42,7 @@ void	*ph_checker(void *arg)
 	philo = (t_ph *)arg;
 	while (1)
 	{
-		//usleep(100);
+		//usleep(1000);
 		if (philo->t_to_die < (int)(time_now() - philo->wait_time) 
 					|| philo->eat_count == g_all.nt_must_eat)
 			ph_print("\033[0;31m\033[1mdied \033[0m", philo->number, 0);
@@ -61,8 +61,8 @@ void	*ph_routine(void *arg)
 			(void *)(philo)) != 0)
 		return ((void *)0);
 	pthread_detach(philo->checker);
-	if (philo->number % 2 == 0)
-		usleep(10);
+	//if (philo->number % 2 == 0)
+		//usleep(10);
 	while (ph_life(philo))
 		;
 	return ((void *)DEAD);
@@ -80,6 +80,8 @@ void	ph_start(int i, int j, int k)
 	}
 	while (++j < g_all.n_of_philos)
 	{
+		if (g_all.philos[j].number % 2 == 0)
+			usleep((g_all.t_to_eat * 0.5));
 		if (pthread_create(&g_all.philos[j].thread, NULL, ph_routine,
 				(void *)(&g_all.philos[j])) != 0)
 			return ;
