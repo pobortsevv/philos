@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 17:14:05 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/08 00:01:50 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/12 21:50:49 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,29 +23,24 @@ void	death_exit(void)
 int	ft_atoi(const char *str)
 {
 	int			i;
-	int			sign;
 	long int	result;
 
 	i = 0;
-	sign = 1;
 	result = 0;
-	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
+	while (str[i] >= '0' && str[i] <= '9')
 		i++;
-	if (str[i] == '+' || str[i] == '-')
-	{
-		if (str[i] == '-')
-			sign = -1;
-		i++;
-	}
+	if (str[i] != '\0')
+		return (-1);
+	i = 0;
 	while (str[i] >= '0' && str[i] <= '9')
 	{
 		result = (result * 10) + (str[i++] - '0');
-		if (result > 2147483647 && sign == 1)
+		if (result > 2147483647)
 			return (-1);
-		else if (result < -2147483648 && sign == -1)
+		else if (result < -2147483648)
 			return (0);
 	}
-	return (result * sign);
+	return (result);
 }
 
 unsigned long	time_now(void)
@@ -54,15 +49,6 @@ unsigned long	time_now(void)
 
 	gettimeofday(&time, NULL);
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
-}
-
-void	ft_usleep(int time)
-{
-	unsigned long	end;
-
-	end = time_now() + time;
-	while (time_now() < end)
-		usleep(time);
 }
 
 int	ph_print(char *str, int number, int status)

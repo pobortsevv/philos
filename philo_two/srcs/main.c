@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:48:28 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/08 00:04:12 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/12 21:23:39 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,12 +59,21 @@ void	*ph_routine(void *arg)
 			(void *)(philo)) != 0)
 		return ((void *)0);
 	pthread_detach(philo->checker);
-	//if (philo->number % 2 == 0)
-		//usleep(1000 * (g_all.t_to_eat * 0.5));
+	if (philo->number % 2 == 0)
+		usleep(1000);
 	while (ph_life(philo))
 		;
 	return ((void *)DEAD);
 }
+
+//void	*ph_waiter(void *arg)
+//{
+	//usleep(100);
+	//while (1)
+	//{
+//
+	//}
+//}
 
 void	ph_start(int i, int j, int k)
 {
