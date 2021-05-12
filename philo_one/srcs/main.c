@@ -17,8 +17,8 @@ t_all	g_all;
 int	ph_life(t_ph *philo)
 {
 	pthread_mutex_lock(&g_all.forks[philo->right]);
-	pthread_mutex_lock(&g_all.forks[philo->left]);
 	ph_print("has taken a fork", philo->number, 1);
+	pthread_mutex_lock(&g_all.forks[philo->left]);
 	ph_print("has taken a fork", philo->number, 1);
 	ph_print("is eating", philo->number, 1);
 	philo->wait_time = time_now();

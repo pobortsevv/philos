@@ -17,8 +17,8 @@ t_all	g_all;
 int	ph_life(t_ph *philo)
 {
 	sem_wait(g_all.forks);
-	sem_wait(g_all.forks);
 	ph_print("has taken a fork", philo->number, 1);
+	sem_wait(g_all.forks);
 	ph_print("has taken a fork", philo->number, 1);
 	ph_print("is eating", philo->number, 1);
 	philo->wait_time = time_now();
@@ -59,8 +59,8 @@ void	*ph_routine(void *arg)
 			(void *)(philo)) != 0)
 		return ((void *)0);
 	pthread_detach(philo->checker);
-	if (philo->number % 2 == 0)
-		usleep(1000 * (g_all.t_to_eat * 0.5));
+	//if (philo->number % 2 == 0)
+		//usleep(1000 * (g_all.t_to_eat * 0.5));
 	while (ph_life(philo))
 		;
 	return ((void *)DEAD);
