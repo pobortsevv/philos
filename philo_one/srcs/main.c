@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:48:28 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/15 12:52:50 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/15 17:04:36 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	*ph_checker(void *arg)
 	usleep(10);
 	while (1)
 	{
-		usleep(1000 * (g_all.t_to_eat * 0.5));
+		usleep(1000 * (g_all.t_to_eat));
 		while (i < g_all.n_of_philos)
 		{
 			if ((unsigned long)g_all.t_to_die < (time_now() - g_all.philos[i].wait_time))
@@ -67,7 +67,7 @@ void	*ph_routine(void *arg)
 	return ((void *)DEAD);
 }
 
-void	ph_start(int i, int j, int k)
+void	ph_start(int i)
 {
 	while (++i < g_all.n_of_philos)
 	{
@@ -76,18 +76,20 @@ void	ph_start(int i, int j, int k)
 		g_all.philos[i].right = (i + 1) % g_all.n_of_philos;
 		g_all.philos[i].eat_count = 0;
 	}
-	while (++j < g_all.n_of_philos)
+	i = -1;
+	while (++i < g_all.n_of_philos)
 	{
-		if (pthread_create(&g_all.philos[j].thread, NULL, ph_routine,
-				(void *)(&g_all.philos[j])) != 0)
+		if (pthread_create(&g_all.philos[i].thread, NULL, ph_routine,
+				(void *)(&g_all.philos[i])) != 0)
 			return ;
 	}
 	g_all.start = time_now();
 	if (pthread_create(&g_all.checker, NULL, ph_checker, NULL) != 0)
 		return ;
 	pthread_detach(g_all.checker);
-	while (++k < g_all.n_of_philos)
-		pthread_join(g_all.philos[k].thread, NULL);
+	i = -1;
+	while (++i < g_all.n_of_philos)
+		pthread_join(g_all.philos[i].thread, NULL);
 }
 
 int	main(int ac, char **av)
@@ -108,6 +110,6 @@ int	main(int ac, char **av)
 		}
 		i++;
 	}
-	ph_start(-1, -1, -1);
+	ph_start(-1);
 	return (0);
 }
