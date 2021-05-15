@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:48:28 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/15 14:51:41 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/15 16:32:39 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,33 +36,26 @@ int	ph_life(t_ph *philo)
 
 void	*ph_checker(void *arg)
 {
-	int i;
+	t_ph *philo;
 
-	i = 0;
+	philo = (t_ph *)arg;
 	usleep(10);
 	while (1)
 	{
 		usleep(1000);
-		while (i < g_all.n_of_philos)
+		if ((unsigned long)g_all.t_to_die < (time_now() - philo->wait_time))
 		{
-			printf("Проверка %lu\n", g_all.philos[i].wait_time);
-			if ((unsigned long)g_all.t_to_die < (time_now() - g_all.philos[i].wait_time))
-			{
-				printf("g_all.philos[i].wait_time = %lu\n", g_all.philos[i].wait_time);
-				ph_print("\033[0;31m\033[1mdied \033[0m", g_all.philos[i].number, 0);
-			}
-			i++;
+			ph_print("\033[0;31m\033[1mdied \033[0m", philo->number, 0);
 		}
-		i = 0;
 	}
 	return (arg);
 }
 
-void	ph_routine(void *arg)
+void	ph_routine(t_ph *philo)
 {
-	t_ph *philo;
-	
-	philo = (t_ph *)arg;
+	if (pthread_create(&philo->checker, NULL, ph_checker, philo) != 0)
+		return ;
+	pthread_detach(philo->checker);
 	if (philo->number % 2 == 0)
 		usleep(1000);
 	philo->wait_time = time_now();
@@ -70,9 +63,9 @@ void	ph_routine(void *arg)
 		;
 }
 
-void	ph_start(int i, int j, int k)
+void	ph_start(int i, int j)
 {
-	void	*philo;
+	int status;
 
 	while (++i < g_all.n_of_philos)
 	{
@@ -83,26 +76,37 @@ void	ph_start(int i, int j, int k)
 	g_all.start = time_now();
 	while (++j < g_all.n_of_philos)
 	{
-		philo = (void *)&g_all.philos[j];
 		g_all.philos[j].pid = fork(); 
 		if (g_all.philos[j].pid == 0)
-			ph_routine(philo);
+			ph_routine(&g_all.philos[j]);
 	}
-	if (pthread_create(&g_all.checker, NULL, ph_checker, NULL) != 0)
-		return ;
-	pthread_detach(g_all.checker);
-	while (++k < g_all.n_of_philos)
-		waitpid(g_all.philos[k].pid, NULL, 0);
+	while (1)
+	{
+		waitpid(-1, &status, 0);
+		if (WEXITSTATUS(status))
+			break ;
+	}
 }
 
 int	main(int ac, char **av)
 {
+	int i;
+
+	i = 0;
 	if (ac < 5 || ac > 6 || init_args(ac, av))
 		return (write(STDERR, "Wrong arguments\n", 16) - 15);
 	g_all.forks = sem_open("forks", O_CREAT|O_EXCL, S_IRWXU,
 			g_all.n_of_philos);
 	if (g_all.forks == SEM_FAILED)
 		return (write(STDERR, "Error with semaphor\n", 20) - 19);
-	ph_start(-1, -1, -1);
+	ph_start(-1, -1);
+	sem_unlink("print");
+	sem_unlink("forks");
+	while (i < g_all.n_of_philos && g_all.philos[i].pid != 0)
+	{
+		kill(g_all.philos[i].pid, SIGKILL);
+		i++;
+	}
+	free(g_all.philos);
 	return (0);
 }

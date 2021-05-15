@@ -6,27 +6,11 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 17:14:05 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/15 14:23:20 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/15 16:32:37 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_three.h"
-
-void	death_exit(void)
-{
-	int i;
-
-	i = 0;
-	sem_unlink("print");
-	sem_unlink("forks");
-	while (i < g_all.n_of_philos)
-	{
-		kill(g_all.philos[i].pid, SIGTERM);
-		i++;
-	}
-	free(g_all.philos);
-	exit(0);
-}
 
 int	ft_atoi(const char *str)
 {
@@ -65,7 +49,7 @@ int	ph_print(char *str, int number, int status)
 	printf("%lu %d %s\n", (time_now() - g_all.start), number,
 			str);
 	if (status == 0)
-		death_exit();
+		exit(1);
 	sem_post(g_all.print);
 	return (0);
 }

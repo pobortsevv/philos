@@ -22,6 +22,7 @@ typedef struct	s_ph
 	int		die_time_reserv;
 	unsigned long	wait_time;
 	pid_t		pid;
+	pthread_t	checker;
 }		t_ph;
 
 typedef struct	s_all
@@ -35,7 +36,6 @@ typedef struct	s_all
 	unsigned long	start;
 	sem_t		*forks;
 	sem_t		*print;
-	pthread_t	checker;
 	t_ph		*philos;
 }		t_all;
 
@@ -46,6 +46,5 @@ int	init_args(int ac, char **av);
 unsigned long	time_now(void);
 int	ph_print(char *str, int number, int status);
 void	ft_usleep(int time);
-void	death_exit(void);
 
 #endif
