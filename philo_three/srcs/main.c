@@ -36,7 +36,7 @@ int	ph_life(t_ph *philo)
 
 void	*ph_checker(void *arg)
 {
-	t_ph *philo;
+	t_ph	*philo;
 
 	philo = (t_ph *)arg;
 	usleep(5);
@@ -65,7 +65,7 @@ void	ph_routine(t_ph *philo)
 
 void	ph_start(int i)
 {
-	int status;
+	int	status;
 
 	while (++i < g_all.n_of_philos)
 	{
@@ -77,7 +77,7 @@ void	ph_start(int i)
 	g_all.start = time_now();
 	while (++i < g_all.n_of_philos)
 	{
-		g_all.philos[i].pid = fork(); 
+		g_all.philos[i].pid = fork();
 		if (g_all.philos[i].pid == 0)
 			ph_routine(&g_all.philos[i]);
 	}
@@ -91,12 +91,12 @@ void	ph_start(int i)
 
 int	main(int ac, char **av)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (ac < 5 || ac > 6 || init_args(ac, av))
 		return (write(STDERR, "Wrong arguments\n", 16) - 15);
-	g_all.forks = sem_open("forks", O_CREAT|O_EXCL, S_IRWXU,
+	g_all.forks = sem_open("forks", O_CREAT | O_EXCL, S_IRWXU,
 			g_all.n_of_philos);
 	if (g_all.forks == SEM_FAILED)
 		return (write(STDERR, "Error with semaphor\n", 20) - 19);

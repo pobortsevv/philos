@@ -36,7 +36,7 @@ int	ph_life(t_ph *philo)
 
 void	*ph_checker(void *arg)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	usleep(10);
@@ -45,8 +45,10 @@ void	*ph_checker(void *arg)
 		usleep(1000 * (g_all.t_to_eat));
 		while (i < g_all.n_of_philos)
 		{
-			if ((unsigned long)g_all.t_to_die < (time_now() - g_all.philos[i].wait_time))
-				ph_print("\033[0;31m\033[1mdied \033[0m", g_all.philos[i].number, 0);
+			if ((unsigned long)g_all.t_to_die
+				< (time_now() - g_all.philos[i].wait_time))
+				ph_print("\033[0;31m\033[1mdied \033[0m",
+					g_all.philos[i].number, 0);
 			i++;
 		}
 		i = 0;

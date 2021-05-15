@@ -47,7 +47,7 @@ int	ph_print(char *str, int number, int status)
 {
 	sem_wait(g_all.print);
 	printf("%lu %d %s\n", (time_now() - g_all.start), number,
-			str);
+		str);
 	if (status == 0)
 		exit(1);
 	sem_post(g_all.print);
@@ -71,11 +71,12 @@ int	init_args(int ac, char **av)
 		return (1);
 	if (g_all.n_of_philos < 2 || g_all.t_to_die < 0
 		|| g_all.t_to_eat < 0 || g_all.t_to_sleep < 0
-		|| (ac == 6 && g_all.nt_must_eat < 0))
+		|| (ac == 6 && g_all.nt_must_eat < 0)
+		|| g_all.n_of_philos > 200)
 	{
 		free(g_all.philos);
 		return (1);
 	}
-	g_all.print = sem_open("print", O_CREAT|O_EXCL, S_IRWXU, 1);
+	g_all.print = sem_open("print", O_CREAT | O_EXCL, S_IRWXU, 1);
 	return (0);
 }

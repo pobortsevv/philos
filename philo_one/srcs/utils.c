@@ -14,7 +14,7 @@
 
 void	death_exit(void)
 {
-	int i;
+	int	i;
 
 	i = g_all.n_of_philos - 1;
 	while (i >= 0)
@@ -90,7 +90,8 @@ int	init_args(int ac, char **av)
 		return (1);
 	if (g_all.n_of_philos < 2 || g_all.t_to_die < 0
 		|| g_all.t_to_eat < 0 || g_all.t_to_sleep < 0
-		|| (ac == 6 && g_all.nt_must_eat < 0))
+		|| (ac == 6 && g_all.nt_must_eat < 0)
+		|| g_all.n_of_philos > 200)
 	{
 		free(g_all.philos);
 		return (1);
