@@ -1,8 +1,9 @@
-#ifndef PHILO_TWO_H
-# define PHILO_TWO_H
+#ifndef PHILO_THREE_H
+# define PHILO_THREE_H
 
 # include <stdio.h>
 # include <stdlib.h>
+# include <signal.h>
 # include <unistd.h>
 # include <pthread.h>
 # include <semaphore.h>
@@ -20,7 +21,7 @@ typedef struct	s_ph
 	int		t_to_die;
 	int		die_time_reserv;
 	unsigned long	wait_time;
-	pthread_t	thread;
+	pid_t		pid;
 }		t_ph;
 
 typedef struct	s_all

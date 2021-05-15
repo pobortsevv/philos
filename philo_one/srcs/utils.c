@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 17:14:05 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/12 21:49:03 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/15 12:35:31 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int	init_args(int ac, char **av)
 	else
 		g_all.nt_must_eat = -1;
 	g_all.philos = (t_ph *)malloc(sizeof(t_ph) * g_all.n_of_philos);
-	if (!g_all.philos)
+	if (g_all.philos == NULL)
 		return (1);
 	if (g_all.n_of_philos < 2 || g_all.t_to_die < 0
 		|| g_all.t_to_eat < 0 || g_all.t_to_sleep < 0

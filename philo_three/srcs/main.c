@@ -6,11 +6,11 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:48:28 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/15 12:52:49 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/15 14:51:41 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_two.h"
+#include "philo_three.h"
 
 t_all	g_all;
 
@@ -45,8 +45,12 @@ void	*ph_checker(void *arg)
 		usleep(1000);
 		while (i < g_all.n_of_philos)
 		{
+			printf("Проверка %lu\n", g_all.philos[i].wait_time);
 			if ((unsigned long)g_all.t_to_die < (time_now() - g_all.philos[i].wait_time))
+			{
+				printf("g_all.philos[i].wait_time = %lu\n", g_all.philos[i].wait_time);
 				ph_print("\033[0;31m\033[1mdied \033[0m", g_all.philos[i].number, 0);
+			}
 			i++;
 		}
 		i = 0;
@@ -54,39 +58,41 @@ void	*ph_checker(void *arg)
 	return (arg);
 }
 
-void	*ph_routine(void *arg)
+void	ph_routine(void *arg)
 {
 	t_ph *philo;
-
+	
 	philo = (t_ph *)arg;
 	if (philo->number % 2 == 0)
 		usleep(1000);
 	philo->wait_time = time_now();
 	while (ph_life(philo))
 		;
-	return ((void *)DEAD);
 }
 
 void	ph_start(int i, int j, int k)
 {
+	void	*philo;
+
 	while (++i < g_all.n_of_philos)
 	{
 		g_all.philos[i].number = i + 1;
 		g_all.philos[i].eat_count = 0;
 		g_all.philos[i].t_to_die = g_all.t_to_die;
 	}
+	g_all.start = time_now();
 	while (++j < g_all.n_of_philos)
 	{
-		if (pthread_create(&g_all.philos[j].thread, NULL, ph_routine,
-				(void *)(&g_all.philos[j])) != 0)
-			return ;
+		philo = (void *)&g_all.philos[j];
+		g_all.philos[j].pid = fork(); 
+		if (g_all.philos[j].pid == 0)
+			ph_routine(philo);
 	}
-	g_all.start = time_now();
 	if (pthread_create(&g_all.checker, NULL, ph_checker, NULL) != 0)
 		return ;
 	pthread_detach(g_all.checker);
 	while (++k < g_all.n_of_philos)
-		pthread_join(g_all.philos[k].thread, NULL);
+		waitpid(g_all.philos[k].pid, NULL, 0);
 }
 
 int	main(int ac, char **av)

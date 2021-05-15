@@ -6,7 +6,7 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:48:28 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/12 20:50:01 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/15 12:52:50 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,22 @@ int	ph_life(t_ph *philo)
 
 void	*ph_checker(void *arg)
 {
-	t_ph	*philo;
+	int i;
 
-	philo = (t_ph *)arg;
-	philo->wait_time = time_now();
+	i = 0;
 	usleep(10);
 	while (1)
 	{
-		usleep(3);
-		if ((unsigned long)g_all.t_to_die < (time_now() - philo->wait_time))
-			ph_print("\033[0;31m\033[1mdied \033[0m", philo->number, 0);
+		usleep(1000 * (g_all.t_to_eat * 0.5));
+		while (i < g_all.n_of_philos)
+		{
+			if ((unsigned long)g_all.t_to_die < (time_now() - g_all.philos[i].wait_time))
+				ph_print("\033[0;31m\033[1mdied \033[0m", g_all.philos[i].number, 0);
+			i++;
+		}
+		i = 0;
 	}
-	return ((void *)0);
+	return (arg);
 }
 
 void	*ph_routine(void *arg)
@@ -55,12 +59,9 @@ void	*ph_routine(void *arg)
 	t_ph	*philo;
 
 	philo = (t_ph *)arg;
-	if (pthread_create(&philo->checker, NULL, ph_checker,
-			(void *)(philo)) != 0)
-		return ((void *)0);
-	pthread_detach(philo->checker);
 	if (philo->number % 2 == 0)
 		usleep(1000 * (g_all.t_to_eat * 0.5));
+	philo->wait_time = time_now();
 	while (ph_life(philo))
 		;
 	return ((void *)DEAD);
@@ -77,11 +78,14 @@ void	ph_start(int i, int j, int k)
 	}
 	while (++j < g_all.n_of_philos)
 	{
-		g_all.start = time_now();
 		if (pthread_create(&g_all.philos[j].thread, NULL, ph_routine,
 				(void *)(&g_all.philos[j])) != 0)
 			return ;
 	}
+	g_all.start = time_now();
+	if (pthread_create(&g_all.checker, NULL, ph_checker, NULL) != 0)
+		return ;
+	pthread_detach(g_all.checker);
 	while (++k < g_all.n_of_philos)
 		pthread_join(g_all.philos[k].thread, NULL);
 }

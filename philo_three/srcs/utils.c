@@ -6,16 +6,24 @@
 /*   By: sabra <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 17:14:05 by sabra             #+#    #+#             */
-/*   Updated: 2021/05/15 12:50:56 by sabra            ###   ########.fr       */
+/*   Updated: 2021/05/15 14:23:20 by sabra            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_two.h"
+#include "philo_three.h"
 
 void	death_exit(void)
 {
+	int i;
+
+	i = 0;
 	sem_unlink("print");
 	sem_unlink("forks");
+	while (i < g_all.n_of_philos)
+	{
+		kill(g_all.philos[i].pid, SIGTERM);
+		i++;
+	}
 	free(g_all.philos);
 	exit(0);
 }
