@@ -54,6 +54,7 @@ Example:
 	./philo_one 4 310 200 100
 ![enter image description here](https://psv4.userapi.com/c536436/u482986620/docs/d10/e5fccbf628f3/Screen_Shot_2021-07-09_at_5_02_21_PM.png?extra=d6MulFuEwX1hcd_LTvUApIa6OzofL7rzV6jW1X2Ov9EehFUeuGAbIMmNc7eLk6ugXPYO-RcRjYwakzWX5p6LELVzuKY0b3SEIn0Z46UGFIbtcQWYB_YINuiT8QE4s8P4PaJ8eY8PPLSs_NPrQCIHDoGsG38) 
 
+*42 école project*
 
 
  
